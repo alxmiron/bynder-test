@@ -1,21 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Navbar, Button, FocusStyleManager, Alignment } from '@blueprintjs/core';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import PeopleDashboard from './components/PeopleDashboard';
+import { fetchAllPeople } from './utils/fetching';
 import './App.scss';
 
-function App() {
+FocusStyleManager.onlyShowFocusOnTabs();
+
+const App = () => {
+	const [peopleHash, setPeopleHash] = React.useState({});
+	React.useEffect(() => {
+		fetchAllPeople().then(setPeopleHash);
+	}, []);
+
+	const inRoot = window.location.pathname === '/';
 	return (
-		<div className="App">
-			<header className="App-header">
-				<img src={logo} className="App-logo" alt="logo" />
-				<p>
-					Edit <code>src/App.js</code> and save to reload.
-				</p>
-				<a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-					Learn React
-				</a>
-			</header>
-		</div>
+		<Router>
+			<div className="app--container">
+				<Navbar>
+					<Navbar.Group align={Alignment.LEFT}>
+						<Navbar.Heading>Star Wars</Navbar.Heading>
+						<Navbar.Divider />
+						{!inRoot && (
+							<Link to="/">
+								<Button minimal text="Star Wars" />
+							</Link>
+						)}
+					</Navbar.Group>
+				</Navbar>
+
+				<Switch>
+					<Route path="/">
+						<PeopleDashboard peopleHash={peopleHash} />
+					</Route>
+				</Switch>
+			</div>
+		</Router>
 	);
-}
+};
 
 export default App;

@@ -1,4 +1,5 @@
 @import '../node_modules/normalize.css/normalize.css';
+@import '../node_modules/@blueprintjs/core/lib/css/blueprint.css';
 
 body {
 	margin: 0;
@@ -7,6 +8,8 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+html,
+body,
+#root {
+	height: 100%;
 }

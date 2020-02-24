@@ -1,0 +1,15 @@
+.people--list {
+	margin: 0;
+	padding: 10px;
+	flex: 1 1 auto;
+	overflow: auto;
+	list-style: none;
+
+	.bp3-button.bp3-fill {
+		justify-content: flex-start;
+	}
+
+	.bp3-spinner {
+		height: 100%;
+	}
+}
