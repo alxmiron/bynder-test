@@ -1,0 +1,17 @@
+.filter--control {
+	&.bp3-active {
+		margin-bottom: 15px;
+	}
+
+	.bp3-button {
+		margin: 5px 0;
+
+		&.bp3-fill {
+			justify-content: space-between;
+		}
+	}
+
+	.bp3-checkbox {
+		margin-left: 10px;
+	}
+}
