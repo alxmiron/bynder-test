@@ -4,6 +4,11 @@ export const fetchPeople = (pageId = 1) => {
 	const numProps = ['height', 'mass'];
 	return fetch(`${ApiHost}/people/?page=${pageId}`)
 		.then(res => res.json())
+		.catch(error => {
+			console.error(error);
+			const data = { results: [], count: 0 };
+			return data;
+		})
 		.then(data => {
 			const amount = data.results.length;
 			const base = (pageId - 1) * amount;
