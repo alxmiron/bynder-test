@@ -2,25 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
-import { Spinner, Button, Classes as BpClasses } from '@blueprintjs/core';
+import { Spinner, Classes as BpClasses } from '@blueprintjs/core';
 import { sortItemsByProp } from '../utils/sorting';
+import PeopleListHeadCell from './PeopleListHeadCell';
 import './PeopleList.scss';
 
 const PeopleList = props => {
 	const people = Object.values(props.peopleHash);
 	const className = classNames(BpClasses.HTML_TABLE, BpClasses.HTML_TABLE_BORDERED, BpClasses.HTML_TABLE_STRIPED, BpClasses.INTERACTIVE, 'people--table');
 	const [sorting, setSorting] = React.useState({ name: 1 });
-	const renderHeadCell = (propName, label, defaultValue) => {
-		const isActive = sorting[propName] !== undefined;
-		return (
-			<th key={propName} className={classNames(isActive && BpClasses.ACTIVE)} onClick={isActive ? null : () => setSorting({ [propName]: defaultValue })}>
-				<span>{label}</span>
-				{sorting[propName] !== undefined && (
-					<Button icon={sorting[propName] === 1 ? 'arrow-up' : 'arrow-down'} onClick={() => setSorting({ [propName]: -sorting[propName] })} minimal />
-				)}
-			</th>
-		);
-	};
 
 	return (
 		<div className="people--container">
@@ -29,11 +19,9 @@ const PeopleList = props => {
 					<table className={className}>
 						<thead>
 							<tr>
-								{[
-									['name', 'Name', 1],
-									['height', 'Height', -1],
-									['mass', 'Mass', -1],
-								].map(cell => renderHeadCell(...cell))}
+								<PeopleListHeadCell propName="name" label="Name" defaultValue={1} sorting={sorting} setSorting={setSorting} />
+								<PeopleListHeadCell propName="height" label="Height" defaultValue={-1} sorting={sorting} setSorting={setSorting} />
+								<PeopleListHeadCell propName="mass" label="Mass" defaultValue={-1} sorting={sorting} setSorting={setSorting} />
 							</tr>
 						</thead>
 						<tbody>

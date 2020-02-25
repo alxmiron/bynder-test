@@ -10,8 +10,9 @@ export const fetchPeople = (pageId = 1) => {
 			return data;
 		})
 		.then(data => {
+			const amountPerPage = 10;
 			const amount = data.results.length;
-			const base = (pageId - 1) * amount;
+			const base = (pageId - 1) * amountPerPage;
 			const hash = data.results.reduce((acc, person, idx) => {
 				const personId = `${base + idx + 1}`;
 				acc[personId] = { ...person, id: personId };
@@ -34,7 +35,7 @@ export const fetchAllPeople = () => {
 	return fetchPeople()
 		.then(data => {
 			const itemsPerPage = Object.keys(data.hash).length;
-			const pagesAmount = Math.floor(data.totalAmount / itemsPerPage);
+			const pagesAmount = Math.ceil(data.totalAmount / itemsPerPage);
 			const requests = Array(pagesAmount)
 				.fill(1)
 				.map((_, idx) => {
