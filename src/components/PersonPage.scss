@@ -1,0 +1,19 @@
+.person--container {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 30px;
+	overflow: auto;
+}
+
+.person--card {
+	width: 100%;
+	max-width: 600px;
+	min-height: 300px;
+
+	.bp3-tag {
+		margin: 0 5px 5px 0;
+	}
+}

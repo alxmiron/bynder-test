@@ -1,5 +1,18 @@
 import { ApiHost, isDev } from '../constants';
 
+export const fetchPerson = personId => {
+	return fetch(`${ApiHost}/people/${personId}/`)
+		.then(res => res.json())
+		.catch(error => {
+			console.error(error);
+			return {};
+		})
+		.then(data => {
+			if (isDev) console.log(data);
+			return data;
+		});
+};
+
 export const fetchPeople = (pageId = 1) => {
 	const numProps = ['height', 'mass'];
 	return fetch(`${ApiHost}/people/?page=${pageId}`)
