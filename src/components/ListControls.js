@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { collectFilterOptions } from '../utils/filtering';
+import { defaultSorter } from '../utils/sorting';
 import FilterPropControl from './FilterPropControl';
 import './ListControls.scss';
 
@@ -11,16 +12,18 @@ const ListControls = props => {
 	return (
 		<div className="controls--container">
 			<div className="controls--scroll">
-				{Object.keys(props.filterParams).map(propName => (
-					<FilterPropControl
-						key={propName}
-						propName={propName}
-						options={allOptions[propName] || {}}
-						checkedOptions={props.filterParams[propName] || {}}
-						setFilterParam={setFilterParamFactory(propName)}
-						isLoading={isLoading}
-					/>
-				))}
+				{Object.keys(props.filterParams)
+					.sort(defaultSorter)
+					.map(propName => (
+						<FilterPropControl
+							key={propName}
+							propName={propName}
+							options={allOptions[propName] || {}}
+							checkedOptions={props.filterParams[propName] || {}}
+							setFilterParam={setFilterParamFactory(propName)}
+							isLoading={isLoading}
+						/>
+					))}
 			</div>
 		</div>
 	);

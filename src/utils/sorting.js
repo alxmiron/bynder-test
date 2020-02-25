@@ -7,3 +7,9 @@ export const sortItemsByProp = (items, sortParams) => {
 		return 0;
 	});
 };
+
+export const defaultSorter = (a, b, direction = 1) => {
+	if (a > b) return direction;
+	if (a < b) return -direction;
+	return 0;
+};
