@@ -1,6 +1,7 @@
 {
 	"editor.formatOnSave": true,
 	"cSpell.words": [
-		"blueprintjs"
+		"blueprintjs",
+		"uuidv"
 	]
 }

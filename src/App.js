@@ -1,7 +1,8 @@
 import React from 'react';
-import { Navbar, Button, FocusStyleManager, Alignment } from '@blueprintjs/core';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { FocusStyleManager } from '@blueprintjs/core';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PeopleDashboard from './components/PeopleDashboard';
+// import PersonPage from './components/PersonPage';
 import { fetchAllPeople } from './utils/fetching';
 import './App.scss';
 
@@ -12,24 +13,13 @@ const App = () => {
 	React.useEffect(() => {
 		fetchAllPeople().then(setPeopleHash);
 	}, []);
-
-	const inRoot = window.location.pathname === '/';
 	return (
 		<Router>
 			<div className="app--container">
-				<Navbar>
-					<Navbar.Group align={Alignment.LEFT}>
-						<Navbar.Heading>Star Wars</Navbar.Heading>
-						<Navbar.Divider />
-						{!inRoot && (
-							<Link to="/">
-								<Button minimal text="Home" />
-							</Link>
-						)}
-					</Navbar.Group>
-				</Navbar>
-
 				<Switch>
+					{/* <Route path="/people/:id">
+						<PersonPage peopleHash={peopleHash} setPeopleHash={setPeopleHash} />
+					</Route> */}
 					<Route path="/">
 						<PeopleDashboard peopleHash={peopleHash} />
 					</Route>
