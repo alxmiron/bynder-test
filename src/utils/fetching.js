@@ -1,6 +1,7 @@
 import { ApiHost, isDev } from '../constants';
 
 export const fetchPeople = (pageId = 1) => {
+	const numProps = ['height', 'mass'];
 	return fetch(`${ApiHost}/people/?page=${pageId}`)
 		.then(res => res.json())
 		.then(data => {
@@ -9,6 +10,10 @@ export const fetchPeople = (pageId = 1) => {
 			const hash = data.results.reduce((acc, person, idx) => {
 				const personId = `${base + idx + 1}`;
 				acc[personId] = { ...person, id: personId };
+				numProps.forEach(propName => {
+					const parsed = parseInt(acc[personId][propName], 10);
+					acc[personId][propName] = isNaN(parsed) ? undefined : parsed;
+				});
 				return acc;
 			}, {});
 			return {

@@ -23,7 +23,7 @@ const App = () => {
 						<Navbar.Divider />
 						{!inRoot && (
 							<Link to="/">
-								<Button minimal text="Star Wars" />
+								<Button minimal text="Home" />
 							</Link>
 						)}
 					</Navbar.Group>
