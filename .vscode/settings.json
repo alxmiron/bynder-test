@@ -2,6 +2,9 @@
 	"editor.formatOnSave": true,
 	"cSpell.words": [
 		"blueprintjs",
+		"eqeqeq",
+		"homeworld",
+		"neighbours",
 		"uuidv"
 	]
 }

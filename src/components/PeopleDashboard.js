@@ -1,16 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { func } from 'prop-types';
 import { Navbar, Alignment } from '@blueprintjs/core';
 import ListControls from './ListControls';
 import PeopleList from './PeopleList';
 import { getInitFilterParams, filterItemsHash } from '../utils/filtering';
+import { fetchAllPeople } from '../utils/fetching';
 import { isDev } from '../constants';
 import './PeopleDashboard.scss';
 
 const PeopleDashboard = props => {
+	React.useEffect(() => {
+		fetchAllPeople().then(props.setPeopleHash);
+	}, []);
+
 	const filterProps = ['hair_color', 'skin_color', 'eye_color', 'birth_year', 'gender'];
 	const [filterParams, setFilterParams] = React.useState(getInitFilterParams(filterProps));
-	if (isDev) console.log('filterParams:', filterParams);
+	if (isDev) {
+		console.log('filterParams:');
+		console.log(filterParams);
+	}
 	return (
 		<>
 			<Navbar>
@@ -30,6 +38,7 @@ const PeopleDashboard = props => {
 const { shape } = PropTypes;
 PeopleDashboard.propTypes = {
 	peopleHash: shape({}).isRequired,
+	setPeopleHash: func.isRequired,
 };
 
 export default PeopleDashboard;

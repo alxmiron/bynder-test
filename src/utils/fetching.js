@@ -1,4 +1,10 @@
 import { ApiHost, isDev } from '../constants';
+import { formatNumericObjectProps } from './helpers';
+
+const getPersonId = personURL => {
+	const match = personURL.match(/(\d+)\/?$/);
+	return parseInt(match[1], 10);
+};
 
 export const fetchPerson = personId => {
 	return fetch(`${ApiHost}/people/${personId}/`)
@@ -7,19 +13,18 @@ export const fetchPerson = personId => {
 			console.error(error);
 			return {};
 		})
-		.then(data => {
-			if (isDev) console.log(data);
-			return data;
+		.then(personData => {
+			personData.id = getPersonId(personData.url);
+			const person = formatNumericObjectProps(personData, ['height', 'mass']);
+			if (isDev) {
+				console.log('Fetched person:');
+				console.log(person);
+			}
+			return person;
 		});
 };
 
-const getPersonId = person => {
-	const match = person.url.match(/(\d+)\/?$/);
-	return parseInt(match[1], 10);
-};
-
 export const fetchPeople = (pageId = 1) => {
-	const numProps = ['height', 'mass'];
 	return fetch(`${ApiHost}/people/?page=${pageId}`)
 		.then(res => res.json())
 		.catch(error => {
@@ -31,13 +36,9 @@ export const fetchPeople = (pageId = 1) => {
 			const amountPerPage = 10;
 			const amount = data.results.length;
 			const base = (pageId - 1) * amountPerPage;
-			const hash = data.results.reduce((acc, person, idx) => {
-				const personId = getPersonId(person);
-				acc[personId] = { ...person, id: personId };
-				numProps.forEach(propName => {
-					const parsed = parseInt(acc[personId][propName], 10);
-					acc[personId][propName] = isNaN(parsed) ? undefined : parsed;
-				});
+			const hash = data.results.reduce((acc, person) => {
+				person.id = getPersonId(person.url);
+				acc[person.id] = formatNumericObjectProps(person, ['height', 'mass']);
 				return acc;
 			}, {});
 			return {
@@ -69,7 +70,24 @@ export const fetchAllPeople = () => {
 			});
 		})
 		.then(data => {
-			if (isDev) console.log(data);
+			// if (isDev) console.log(data);
 			return data;
+		});
+};
+
+export const fetchPlanet = planetURL => {
+	return fetch(planetURL)
+		.then(res => res.json())
+		.catch(error => {
+			console.error(error);
+			return {};
+		})
+		.then(planetData => {
+			planetData.residents = planetData.residents.map(getPersonId);
+			if (isDev) {
+				console.log('Fetched planet:');
+				console.log(planetData);
+			}
+			return planetData;
 		});
 };
