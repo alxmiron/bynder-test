@@ -29,7 +29,16 @@ export const fetchPerson = personId => {
 		});
 };
 
-export const fetchPeople = (pageId = 1) => {
+export const fetchPeople = personIdList => {
+	return Promise.all(personIdList.map(fetchPerson)).then(results => {
+		return results.reduce((acc, person) => {
+			acc[person.id] = person;
+			return acc;
+		}, {});
+	});
+};
+
+export const fetchPeoplePage = (pageId = 1) => {
 	return fetch(`${ApiHost}/people/?page=${pageId}`)
 		.then(res => res.json())
 		.catch(error => {
@@ -56,7 +65,7 @@ export const fetchPeople = (pageId = 1) => {
 };
 
 export const fetchAllPeople = () => {
-	return fetchPeople()
+	return fetchPeoplePage()
 		.then(data => {
 			const itemsPerPage = Object.keys(data.hash).length;
 			const pagesAmount = Math.ceil(data.totalAmount / itemsPerPage);
@@ -65,7 +74,7 @@ export const fetchAllPeople = () => {
 				.map((_, idx) => {
 					const pageId = idx + 1;
 					if (pageId === 1) return Promise.resolve(data.hash); // Already fetched
-					return fetchPeople(pageId);
+					return fetchPeoplePage(pageId);
 				});
 			return Promise.all(requests);
 		})

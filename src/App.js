@@ -13,6 +13,7 @@ const App = () => {
 	const [peopleHash, setHash] = React.useState({});
 	const setPeopleHash = newPeopleHash => setHash(mergeTwoHashes(peopleHash, newPeopleHash, ['planet']));
 	const savePersonInHash = person => setHash({ ...peopleHash, [person.id]: person });
+	const savePersonsInHash = persons => setHash({ ...peopleHash, ...persons });
 
 	const [planetsHash, setPlanetsHash] = React.useState({});
 	const savePlanetInHash = planet => setPlanetsHash({ ...planetsHash, [planet.id]: planet });
@@ -30,7 +31,13 @@ const App = () => {
 			<div className="app--container">
 				<Switch>
 					<Route path="/people/:id">
-						<PersonPage peopleHash={peopleHash} savePersonInHash={savePersonInHash} planetsHash={planetsHash} savePlanetInHash={savePlanetInHash} />
+						<PersonPage
+							peopleHash={peopleHash}
+							savePersonInHash={savePersonInHash}
+							savePersonsInHash={savePersonsInHash}
+							planetsHash={planetsHash}
+							savePlanetInHash={savePlanetInHash}
+						/>
 					</Route>
 					<Route path="/">
 						<PeopleDashboard peopleHash={peopleHash} setPeopleHash={setPeopleHash} />
