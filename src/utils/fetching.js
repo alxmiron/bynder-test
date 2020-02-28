@@ -13,6 +13,11 @@ export const fetchPerson = personId => {
 		});
 };
 
+const getPersonId = person => {
+	const match = person.url.match(/(\d+)\/?$/);
+	return parseInt(match[1], 10);
+};
+
 export const fetchPeople = (pageId = 1) => {
 	const numProps = ['height', 'mass'];
 	return fetch(`${ApiHost}/people/?page=${pageId}`)
@@ -27,7 +32,7 @@ export const fetchPeople = (pageId = 1) => {
 			const amount = data.results.length;
 			const base = (pageId - 1) * amountPerPage;
 			const hash = data.results.reduce((acc, person, idx) => {
-				const personId = `${base + idx + 1}`;
+				const personId = getPersonId(person);
 				acc[personId] = { ...person, id: personId };
 				numProps.forEach(propName => {
 					const parsed = parseInt(acc[personId][propName], 10);
