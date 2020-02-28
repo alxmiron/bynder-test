@@ -11,19 +11,26 @@ FocusStyleManager.onlyShowFocusOnTabs();
 
 const App = () => {
 	const [peopleHash, setHash] = React.useState({});
-	const setPeopleHash = newPeopleHash => setHash(mergeTwoHashes(peopleHash, newPeopleHash, ['homeName', 'neighbours']));
+	const setPeopleHash = newPeopleHash => setHash(mergeTwoHashes(peopleHash, newPeopleHash, ['planet']));
 	const savePersonInHash = person => setHash({ ...peopleHash, [person.id]: person });
 
+	const [planetsHash, setPlanetsHash] = React.useState({});
+	const savePlanetInHash = planet => setPlanetsHash({ ...planetsHash, [planet.id]: planet });
+
 	if (isDev) {
+		console.log('----');
 		console.log('Current peopleHash:');
 		console.log(peopleHash);
+		console.log('Current planetsHash:');
+		console.log(planetsHash);
+		console.log('----');
 	}
 	return (
 		<Router>
 			<div className="app--container">
 				<Switch>
 					<Route path="/people/:id">
-						<PersonPage peopleHash={peopleHash} savePersonInHash={savePersonInHash} />
+						<PersonPage peopleHash={peopleHash} savePersonInHash={savePersonInHash} planetsHash={planetsHash} savePlanetInHash={savePlanetInHash} />
 					</Route>
 					<Route path="/">
 						<PeopleDashboard peopleHash={peopleHash} setPeopleHash={setPeopleHash} />

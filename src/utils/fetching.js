@@ -1,9 +1,15 @@
 import { ApiHost, isDev } from '../constants';
 import { formatNumericObjectProps } from './helpers';
 
-const getPersonId = personURL => {
-	const match = personURL.match(/(\d+)\/?$/);
+const getIdFromURL = url => {
+	const match = url.match(/(\d+)\/?$/);
 	return parseInt(match[1], 10);
+};
+
+const formatFetchedPerson = personData => {
+	personData.id = getIdFromURL(personData.url);
+	personData.homeworld = getIdFromURL(personData.homeworld);
+	return formatNumericObjectProps(personData, ['height', 'mass']);
 };
 
 export const fetchPerson = personId => {
@@ -14,8 +20,7 @@ export const fetchPerson = personId => {
 			return {};
 		})
 		.then(personData => {
-			personData.id = getPersonId(personData.url);
-			const person = formatNumericObjectProps(personData, ['height', 'mass']);
+			const person = formatFetchedPerson(personData);
 			if (isDev) {
 				console.log('Fetched person:');
 				console.log(person);
@@ -36,9 +41,9 @@ export const fetchPeople = (pageId = 1) => {
 			const amountPerPage = 10;
 			const amount = data.results.length;
 			const base = (pageId - 1) * amountPerPage;
-			const hash = data.results.reduce((acc, person) => {
-				person.id = getPersonId(person.url);
-				acc[person.id] = formatNumericObjectProps(person, ['height', 'mass']);
+			const hash = data.results.reduce((acc, personData) => {
+				const person = formatFetchedPerson(personData);
+				acc[person.id] = person;
 				return acc;
 			}, {});
 			return {
@@ -75,15 +80,16 @@ export const fetchAllPeople = () => {
 		});
 };
 
-export const fetchPlanet = planetURL => {
-	return fetch(planetURL)
+export const fetchPlanet = planetId => {
+	return fetch(`${ApiHost}/planets/${planetId}/`)
 		.then(res => res.json())
 		.catch(error => {
 			console.error(error);
 			return {};
 		})
 		.then(planetData => {
-			planetData.residents = planetData.residents.map(getPersonId);
+			planetData.id = getIdFromURL(planetData.url);
+			planetData.residents = planetData.residents.map(getIdFromURL);
 			if (isDev) {
 				console.log('Fetched planet:');
 				console.log(planetData);

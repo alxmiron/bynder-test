@@ -10,21 +10,24 @@ import './PersonPage.scss';
 const PersonPage = props => {
 	const { id: personId } = useParams();
 	const localPerson = props.peopleHash[personId];
-	const person = localPerson || {};
+	const planetId = localPerson && localPerson.homeworld;
+	const localPlanet = localPerson && props.planetsHash[planetId];
 
 	React.useEffect(() => {
-		const personFromHash = props.peopleHash[personId];
-		const fetchPersonData = () => (personFromHash ? Promise.resolve(personFromHash) : fetchPerson(personId));
-		fetchPersonData().then(personData => {
-			if (!personFromHash) props.savePersonInHash(personData);
-			if (personData.homeName && personData.neighbours) return; // Planet data is loaded already
-			fetchPlanet(personData.homeworld).then(planet => {
-				const extendedPersonData = { ...personData, homeName: planet.name, neighbours: planet.residents };
-				props.savePersonInHash(extendedPersonData);
-			});
-		});
+		if (!localPerson) {
+			fetchPerson(personId).then(props.savePersonInHash);
+		}
 	}, [personId]);
 
+	React.useEffect(() => {
+		if (!planetId) return;
+		if (!localPlanet) {
+			fetchPlanet(planetId).then(props.savePlanetInHash);
+		}
+	}, [planetId]);
+
+	const person = localPerson || {};
+	const planet = localPlanet || {};
 	return (
 		<>
 			<Navbar>
@@ -48,11 +51,11 @@ const PersonPage = props => {
 						})}
 					</p>
 
-					<h4 className={classNames(!person.homeName && BpClasses.SKELETON)}>
-						{person.name} is from {person.homeName} planet. See other people from this planet:
+					<h4 className={classNames(!planet.name && BpClasses.SKELETON)}>
+						{person.name} is from {planet.name} planet. See other people from this planet:
 					</h4>
 					<ButtonGroup minimal>
-						{(person.neighbours || [])
+						{(planet.residents || [])
 							.reduce((acc, residentId, idx, arr) => {
 								// Skip current person
 								if (residentId == personId) return acc; // eslint-disable-line eqeqeq
@@ -80,6 +83,8 @@ const { shape, func } = PropTypes;
 PersonPage.propTypes = {
 	peopleHash: shape({}).isRequired,
 	savePersonInHash: func.isRequired,
+	planetsHash: shape({}).isRequired,
+	savePlanetInHash: func.isRequired,
 };
 
 export default PersonPage;
