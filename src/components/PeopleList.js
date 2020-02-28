@@ -10,7 +10,7 @@ import './PeopleList.scss';
 const PeopleList = props => {
 	const people = Object.values(props.peopleHash);
 	const className = classNames(BpClasses.HTML_TABLE, BpClasses.HTML_TABLE_BORDERED, BpClasses.HTML_TABLE_STRIPED, BpClasses.INTERACTIVE, 'people--table');
-	const [sorting, setSorting] = React.useState({ name: 1 });
+	const [sorting, setSorting] = React.useState({ id: 1 });
 
 	return (
 		<div className="people--container">
@@ -19,6 +19,7 @@ const PeopleList = props => {
 					<table className={className}>
 						<thead>
 							<tr>
+								<PeopleListHeadCell propName="id" label="ID" defaultValue={1} sorting={sorting} setSorting={setSorting} />
 								<PeopleListHeadCell propName="name" label="Name" defaultValue={1} sorting={sorting} setSorting={setSorting} />
 								<PeopleListHeadCell propName="height" label="Height" defaultValue={-1} sorting={sorting} setSorting={setSorting} />
 								<PeopleListHeadCell propName="mass" label="Mass" defaultValue={-1} sorting={sorting} setSorting={setSorting} />
@@ -27,6 +28,7 @@ const PeopleList = props => {
 						<tbody>
 							{sortItemsByProp(people, sorting).map(person => (
 								<tr key={person.id}>
+									<td>{person.id}</td>
 									<td>
 										<Link to={`/people/${person.id}`}>{person.name}</Link>
 									</td>
