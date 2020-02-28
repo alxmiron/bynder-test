@@ -40,7 +40,7 @@ const App = () => {
 						/>
 					</Route>
 					<Route path="/">
-						<PeopleDashboard peopleHash={peopleHash} setPeopleHash={setPeopleHash} />
+						<PeopleDashboard peopleHash={peopleHash} setPeopleHash={setPeopleHash} planetsHash={planetsHash} />
 					</Route>
 				</Switch>
 			</div>

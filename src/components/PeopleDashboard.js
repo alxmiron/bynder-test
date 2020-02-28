@@ -29,7 +29,7 @@ const PeopleDashboard = props => {
 			</Navbar>
 			<div className="dashboard--layout">
 				<ListControls peopleHash={props.peopleHash} filterParams={filterParams} setFilterParams={setFilterParams} />
-				<PeopleList peopleHash={filterItemsHash(props.peopleHash, filterParams)} />
+				<PeopleList peopleHash={filterItemsHash(props.peopleHash, filterParams)} planetsHash={props.planetsHash} />
 			</div>
 		</>
 	);

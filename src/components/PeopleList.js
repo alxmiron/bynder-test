@@ -23,6 +23,7 @@ const PeopleList = props => {
 								<PeopleListHeadCell propName="name" label="Name" defaultValue={1} sorting={sorting} setSorting={setSorting} />
 								<PeopleListHeadCell propName="height" label="Height" defaultValue={-1} sorting={sorting} setSorting={setSorting} />
 								<PeopleListHeadCell propName="mass" label="Mass" defaultValue={-1} sorting={sorting} setSorting={setSorting} />
+								<PeopleListHeadCell propName="homeworld" label="Home Planet" defaultValue={1} sorting={sorting} setSorting={setSorting} />
 							</tr>
 						</thead>
 						<tbody>
@@ -34,6 +35,7 @@ const PeopleList = props => {
 									</td>
 									<td>{person.height}</td>
 									<td>{person.mass}</td>
+									<td>{props.planetsHash[person.homeworld] ? props.planetsHash[person.homeworld].name : person.homeworld}</td>
 								</tr>
 							))}
 						</tbody>
@@ -49,6 +51,7 @@ const PeopleList = props => {
 const { shape } = PropTypes;
 PeopleList.propTypes = {
 	peopleHash: shape({}).isRequired,
+	planetsHash: shape({}).isRequired,
 };
 
 export default PeopleList;
