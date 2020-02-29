@@ -91,17 +91,13 @@ export const fetchAllPeople = () => {
 		.then(data => {
 			return data.reduce((acc, result) => {
 				return { ...acc, ...result.hash };
-			});
+			}, {});
 		});
 };
 
 export const fetchPlanet = planetId => {
 	return fetch(`${ApiHost}/planets/${planetId}/`)
 		.then(res => res.json())
-		.catch(error => {
-			console.error(error);
-			return {};
-		})
 		.then(planetData => {
 			const planet = formatFetchedPlanet(planetData);
 			if (isDev) {
