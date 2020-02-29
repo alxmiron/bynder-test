@@ -10,7 +10,7 @@ import './PeopleList.scss';
 const PeopleList = props => {
 	const people = Object.values(props.peopleHash);
 	const className = classNames(BpClasses.HTML_TABLE, BpClasses.HTML_TABLE_BORDERED, BpClasses.HTML_TABLE_STRIPED, BpClasses.INTERACTIVE, 'people--table');
-	const [sorting, setSorting] = React.useState({ id: 1 });
+	const [sorting, setSorting] = React.useState({ id: 1 }); // Set initial ascending sorting by ID
 
 	return (
 		<div className="people--container">

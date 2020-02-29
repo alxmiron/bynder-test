@@ -10,15 +10,18 @@ import './PeopleDashboard.scss';
 
 const PeopleDashboard = props => {
 	React.useEffect(() => {
+		// Load data of all people
 		fetchAllPeople().then(props.setPeopleHash);
 	}, []);
 
 	const filterProps = ['hair_color', 'skin_color', 'eye_color', 'birth_year', 'gender'];
 	const [filterParams, setFilterParams] = React.useState(getInitFilterParams(filterProps));
+
 	if (isDev) {
 		console.log('filterParams:');
 		console.log(filterParams);
 	}
+
 	return (
 		<>
 			<Navbar>

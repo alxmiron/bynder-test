@@ -15,6 +15,7 @@ const PersonPage = props => {
 
 	React.useEffect(() => {
 		if (!localPerson) {
+			// Load data of unknown person
 			fetchPerson(personId).then(props.savePersonInHash);
 		}
 	}, [personId]);
@@ -22,19 +23,23 @@ const PersonPage = props => {
 	React.useEffect(() => {
 		if (!planetId) return;
 		if (!localPlanet) {
+			// Load data of unknown planet
 			fetchPlanet(planetId).then(props.savePlanetInHash);
 		}
 	}, [planetId]);
 
 	const person = localPerson || {};
 	const planet = localPlanet || {};
-
 	const otherResidents = (planet.residents || []).filter(residentId => residentId != personId); // eslint-disable-line eqeqeq
+	const noOtherResidents = planet.residents && planet.residents.length === 1;
+
 	React.useEffect(() => {
 		const unknownResidents = otherResidents.filter(residentId => !props.peopleHash[residentId]);
 		if (!unknownResidents.length) return;
+		// Load data of unknown planet residents
 		fetchPeople(unknownResidents).then(props.savePersonsInHash);
 	}, [personId, planet.residents]);
+
 	return (
 		<>
 			<Navbar>
@@ -53,13 +58,13 @@ const PersonPage = props => {
 					<p>
 						{['height', 'mass', 'hair_color', 'skin_color', 'eye_color', 'birth_year', 'gender'].map(propName => {
 							const value = person[propName];
-							if (person.id && !value) return null;
+							if (person.id && !value) return null; // Don't show tags with empty values
 							return <Tag key={propName} className={value ? '' : BpClasses.SKELETON} large minimal>{`${propName}: ${value}`}</Tag>;
 						})}
 					</p>
 
 					<h4 className={classNames(!planet.name && BpClasses.SKELETON)}>
-						{person.name} is from {planet.name} planet. See other people from this planet:
+						{noOtherResidents ? `${person.name} lives on ${planet.name} alone :( ` : `${person.name} is from ${planet.name} planet. See other people from this planet:`}
 					</h4>
 					<ButtonGroup minimal>
 						{otherResidents
