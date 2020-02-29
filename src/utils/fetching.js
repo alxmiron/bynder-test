@@ -7,9 +7,19 @@ const getIdFromURL = url => {
 };
 
 const formatFetchedPerson = personData => {
-	personData.id = getIdFromURL(personData.url);
-	personData.homeworld = getIdFromURL(personData.homeworld);
-	return formatNumericObjectProps(personData, ['height', 'mass']);
+	const planet = formatNumericObjectProps(personData, ['height', 'mass']);
+	planet.id = getIdFromURL(planet.url);
+	planet.homeworld = getIdFromURL(planet.homeworld);
+	return planet;
+};
+
+const formatFetchedPlanet = planetData => {
+	const planet = {
+		...planetData,
+		id: getIdFromURL(planetData.url),
+		residents: planetData.residents.map(getIdFromURL),
+	};
+	return planet;
 };
 
 export const fetchPerson = personId => {
@@ -82,10 +92,6 @@ export const fetchAllPeople = () => {
 			return data.reduce((acc, result) => {
 				return { ...acc, ...result.hash };
 			});
-		})
-		.then(data => {
-			// if (isDev) console.log(data);
-			return data;
 		});
 };
 
@@ -97,12 +103,11 @@ export const fetchPlanet = planetId => {
 			return {};
 		})
 		.then(planetData => {
-			planetData.id = getIdFromURL(planetData.url);
-			planetData.residents = planetData.residents.map(getIdFromURL);
+			const planet = formatFetchedPlanet(planetData);
 			if (isDev) {
 				console.log('Fetched planet:');
-				console.log(planetData);
+				console.log(planet);
 			}
-			return planetData;
+			return planet;
 		});
 };
