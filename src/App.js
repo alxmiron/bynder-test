@@ -3,17 +3,20 @@ import { FocusStyleManager } from '@blueprintjs/core';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PeopleDashboard from './components/PeopleDashboard';
 import PersonPage from './components/PersonPage';
-import { mergeTwoHashes } from './utils/helpers';
 import { isDev } from './constants';
 import './App.scss';
 
 FocusStyleManager.onlyShowFocusOnTabs();
 
 const App = () => {
-	const [peopleHash, setHash] = React.useState({});
-	const setPeopleHash = newPeopleHash => setHash(mergeTwoHashes(peopleHash, newPeopleHash, ['planet']));
-	const savePersonInHash = person => setHash({ ...peopleHash, [person.id]: person });
-	const savePersonsInHash = persons => setHash({ ...peopleHash, ...persons });
+	const [peopleHash, setPeopleHash] = React.useState({});
+	const setPeopleHashIfNeeded = newHash => {
+		const missingItem = Object.keys(newHash).find(personId => !peopleHash[personId]);
+		if (!missingItem) return; // All items are loaded already
+		return setPeopleHash(newHash);
+	};
+	const savePersonInHash = person => setPeopleHash({ ...peopleHash, [person.id]: person });
+	const savePersonsInHash = persons => setPeopleHash({ ...peopleHash, ...persons });
 
 	const [planetsHash, setPlanetsHash] = React.useState({});
 	const savePlanetInHash = planet => setPlanetsHash({ ...planetsHash, [planet.id]: planet });
@@ -40,7 +43,7 @@ const App = () => {
 						/>
 					</Route>
 					<Route path="/">
-						<PeopleDashboard peopleHash={peopleHash} setPeopleHash={setPeopleHash} planetsHash={planetsHash} />
+						<PeopleDashboard peopleHash={peopleHash} setPeopleHash={setPeopleHashIfNeeded} planetsHash={planetsHash} />
 					</Route>
 				</Switch>
 			</div>
