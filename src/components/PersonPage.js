@@ -43,7 +43,7 @@ const PersonPage = props => {
 					<Navbar.Divider />
 
 					<Link to="/">
-						<Button minimal text="Home" />
+						<Button icon="chevron-left" minimal text="Back to list" />
 					</Link>
 				</Navbar.Group>
 			</Navbar>
