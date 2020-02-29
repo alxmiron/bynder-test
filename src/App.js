@@ -10,11 +10,6 @@ FocusStyleManager.onlyShowFocusOnTabs();
 
 const App = () => {
 	const [peopleHash, setPeopleHash] = React.useState({});
-	const setPeopleHashIfNeeded = newHash => {
-		const missingItem = Object.keys(newHash).find(personId => !peopleHash[personId]);
-		if (!missingItem) return; // All items are loaded already
-		return setPeopleHash(newHash);
-	};
 	const savePersonInHash = person => setPeopleHash({ ...peopleHash, [person.id]: person });
 	const savePersonsInHash = persons => setPeopleHash({ ...peopleHash, ...persons });
 
@@ -43,7 +38,7 @@ const App = () => {
 						/>
 					</Route>
 					<Route path="/">
-						<PeopleDashboard peopleHash={peopleHash} setPeopleHash={setPeopleHashIfNeeded} planetsHash={planetsHash} />
+						<PeopleDashboard peopleHash={peopleHash} setPeopleHash={setPeopleHash} planetsHash={planetsHash} />
 					</Route>
 				</Switch>
 			</div>
