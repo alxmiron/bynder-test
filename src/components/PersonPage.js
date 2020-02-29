@@ -14,19 +14,17 @@ const PersonPage = props => {
 	const localPlanet = localPerson && props.planetsHash[planetId];
 
 	React.useEffect(() => {
-		if (!localPerson) {
-			// Load data of unknown person
-			fetchPerson(personId).then(props.savePersonInHash);
-		}
-	}, [personId]);
+		fetchPerson(personId)
+			.then(props.savePersonInHash)
+			.catch(console.error);
+	}, [personId]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	React.useEffect(() => {
-		if (!planetId) return;
-		if (!localPlanet) {
-			// Load data of unknown planet
-			fetchPlanet(planetId).then(props.savePlanetInHash);
-		}
-	}, [planetId]);
+		if (!planetId) return; // ID of planet is not loaded yet
+		fetchPlanet(planetId)
+			.then(props.savePlanetInHash)
+			.catch(console.error);
+	}, [planetId]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const person = localPerson || {};
 	const planet = localPlanet || {};
@@ -35,10 +33,12 @@ const PersonPage = props => {
 
 	React.useEffect(() => {
 		const unknownResidents = otherResidents.filter(residentId => !props.peopleHash[residentId]);
-		if (!unknownResidents.length) return;
+		if (!unknownResidents.length) return; // All residents data is already loaded
 		// Load data of unknown planet residents
-		fetchPeople(unknownResidents).then(props.savePersonsInHash);
-	}, [personId, planet.residents]);
+		fetchPeople(unknownResidents)
+			.then(props.savePersonsInHash)
+			.catch(console.error);
+	}, [personId, planet.residents]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<>

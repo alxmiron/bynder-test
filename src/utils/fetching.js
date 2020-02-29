@@ -25,10 +25,6 @@ const formatFetchedPlanet = planetData => {
 export const fetchPerson = personId => {
 	return fetch(`${ApiHost}/people/${personId}/`)
 		.then(res => res.json())
-		.catch(error => {
-			console.error(error);
-			return {};
-		})
 		.then(personData => {
 			const person = formatFetchedPerson(personData);
 			if (isDev) {
@@ -42,6 +38,7 @@ export const fetchPerson = personId => {
 export const fetchPeople = personIdList => {
 	return Promise.all(personIdList.map(fetchPerson)).then(results => {
 		return results.reduce((acc, person) => {
+			if (!person.id) return acc; // Person object is invalid
 			acc[person.id] = person;
 			return acc;
 		}, {});
@@ -51,13 +48,9 @@ export const fetchPeople = personIdList => {
 export const fetchPeoplePage = (pageId = 1) => {
 	return fetch(`${ApiHost}/people/?page=${pageId}`)
 		.then(res => res.json())
-		.catch(error => {
-			console.error(error);
-			const data = { results: [], count: 0 };
-			return data;
-		})
 		.then(data => {
 			const amountPerPage = 10;
+			const totalAmount = data.count;
 			const amount = data.results.length;
 			const base = (pageId - 1) * amountPerPage;
 			const hash = data.results.reduce((acc, personData) => {
@@ -67,7 +60,7 @@ export const fetchPeoplePage = (pageId = 1) => {
 			}, {});
 			return {
 				hash,
-				totalAmount: data.count,
+				totalAmount,
 				from: base + 1,
 				to: base + amount,
 			};
@@ -77,8 +70,8 @@ export const fetchPeoplePage = (pageId = 1) => {
 export const fetchAllPeople = () => {
 	return fetchPeoplePage()
 		.then(data => {
-			const itemsPerPage = Object.keys(data.hash).length;
-			const pagesAmount = Math.ceil(data.totalAmount / itemsPerPage);
+			const amountPerPage = 10;
+			const pagesAmount = Math.ceil(data.totalAmount / amountPerPage);
 			const requests = Array(pagesAmount)
 				.fill(1)
 				.map((_, idx) => {
