@@ -64,7 +64,9 @@ const PersonPage = props => {
 					</p>
 
 					<h4 className={classNames(!planet.name && BpClasses.SKELETON)}>
-						{noOtherResidents ? `${person.name} lives on ${planet.name} alone :( ` : `${person.name} is from ${planet.name} planet. See other people from this planet:`}
+						{noOtherResidents
+							? `${person.name} lives on ${planet.name} planet alone :(`
+							: `${person.name} is from ${planet.name} planet. See other people from this planet:`}
 					</h4>
 					<ButtonGroup minimal>
 						{otherResidents
